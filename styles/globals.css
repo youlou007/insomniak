@@ -1,0 +1,498 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Thème sombre (par défaut) */
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 0, 0, 0;
+  --particle-color: 255, 255, 255;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Thème clair */
+.light-theme {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+  --particle-color: 0, 0, 0;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Thème clair - texte des poèmes dans les cartes */
+.light-theme .poem-card {
+  color: rgb(0, 0, 0);
+}
+
+/* Popup toujours en texte blanc quel que soit le thème */
+.popup-content {
+  color: rgb(255, 255, 255);
+}
+
+.popup-content h2, 
+.popup-content .poem-text {
+  color: rgb(255, 255, 255) !important;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: rgb(var(--background-rgb));
+  color: rgb(var(--foreground-rgb));
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Polices personnalisées */
+.font-handwriting {
+  font-family: 'Dancing Script', cursive;
+}
+
+.font-blocky {
+  font-family: 'Audiowide', 'Michroma', sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Animation des particules */
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(var(--particle-color), 0.2);
+  animation: particleFlow 15s linear infinite;
+  border-radius: 0; /* Forme carrée */
+  box-shadow: 0 0 10px 2px rgba(var(--particle-color), 0.1); /* Effet de lueur */
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+@keyframes particleFlow {
+  0% {
+    transform: translateY(-50vh) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(110vh) translateX(0);
+    opacity: 0;
+  }
+}
+
+/* Animation des particules du popup */
+.popup-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(var(--particle-color), 0.3);
+  border-radius: 0; /* Forme carrée */
+  box-shadow: 0 0 10px 2px rgba(var(--particle-color), 0.3); /* Effet de lueur augmenté */
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* easeOutQuad pour plus de dynamisme */
+  z-index: 100; /* Augmenté pour être au premier plan */
+  --distance-multiplier: 100%; /* Valeur par défaut, modifiée dynamiquement par JS */
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Directions de particules selon leur origine */
+.popup-particle.from-top {
+  animation-name: particleFromTop;
+}
+
+.popup-particle.from-right {
+  animation-name: particleFromRight;
+}
+
+.popup-particle.from-bottom {
+  animation-name: particleFromBottom;
+}
+
+.popup-particle.from-left {
+  animation-name: particleFromLeft;
+}
+
+/* Directions diagonales pour les coins normaux */
+.popup-particle.from-top-left {
+  animation-name: particleFromTopLeft;
+}
+
+.popup-particle.from-top-right {
+  animation-name: particleFromTopRight;
+}
+
+.popup-particle.from-bottom-right {
+  animation-name: particleFromBottomRight;
+}
+
+.popup-particle.from-bottom-left {
+  animation-name: particleFromBottomLeft;
+}
+
+/* Directions diagonales pour les coins - effet éventail */
+.popup-particle.from-top-left-fan {
+  animation-name: particleFromTopLeftFan;
+}
+
+.popup-particle.from-top-right-fan {
+  animation-name: particleFromTopRightFan;
+}
+
+.popup-particle.from-bottom-right-fan {
+  animation-name: particleFromBottomRightFan;
+}
+
+.popup-particle.from-bottom-left-fan {
+  animation-name: particleFromBottomLeftFan;
+}
+
+@keyframes particleFromTop {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-250px) translateX(0);
+    opacity: 0;
+  }
+}
+
+@keyframes particleFromRight {
+  0% {
+    transform: translateX(0) translateY(0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateX(250px) translateY(0);
+    opacity: 0;
+  }
+}
+
+@keyframes particleFromBottom {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(250px) translateX(0);
+    opacity: 0;
+  }
+}
+
+@keyframes particleFromLeft {
+  0% {
+    transform: translateX(0) translateY(0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateX(-250px) translateY(0);
+    opacity: 0;
+  }
+}
+
+/* Animations pour les coins */
+@keyframes particleFromTopLeft {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(-180px, -180px);
+    opacity: 0;
+  }
+}
+
+@keyframes particleFromTopRight {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(180px, -180px);
+    opacity: 0;
+  }
+}
+
+@keyframes particleFromBottomRight {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(180px, 180px);
+    opacity: 0;
+  }
+}
+
+@keyframes particleFromBottomLeft {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(-180px, 180px);
+    opacity: 0;
+  }
+}
+
+/* Animations pour les coins en éventail */
+@keyframes particleFromTopLeftFan {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    /* Pour le coin supérieur gauche: dispersion vers le haut-gauche (-135° de base)
+       L'angle variable va de -180° à -90° */
+    transform: rotate(-135deg) rotate(var(--fan-angle)) translateX(250px);
+    opacity: 0;
+  }
+}
+
+@keyframes particleFromTopRightFan {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    /* Pour le coin supérieur droit: dispersion vers le haut-droite (-45° de base)
+       L'angle variable va de -90° à 0° */
+    transform: rotate(-45deg) rotate(var(--fan-angle)) translateX(250px);
+    opacity: 0;
+  }
+}
+
+@keyframes particleFromBottomRightFan {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    /* Pour le coin inférieur droit: dispersion vers le bas-droite (45° de base)
+       L'angle variable va de 0° à 90° */
+    transform: rotate(45deg) rotate(var(--fan-angle)) translateX(250px);
+    opacity: 0;
+  }
+}
+
+@keyframes particleFromBottomLeftFan {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+  100% {
+    /* Pour le coin inférieur gauche: dispersion vers le bas-gauche (135° de base)
+       L'angle variable va de 90° à 180° */
+    transform: rotate(135deg) rotate(var(--fan-angle)) translateX(250px);
+    opacity: 0;
+  }
+}
+
+/* Styles pour les poèmes */
+.poem-card {
+  transition: all 0.3s ease;
+  border: none;
+  background: transparent;
+}
+
+.poem-card:hover {
+  transform: translateY(-5px);
+  box-shadow: none;
+}
+
+/* Effet de flou pour le popup */
+.backdrop-blur {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Styles responsifs pour les poèmes */
+@media (min-width: 768px) {
+  .poems-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .poems-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Styles pour la barre de recherche */
+.search-bar {
+  background-color: transparent !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 0 15px var(--shadow-color) !important;
+  backdrop-filter: blur(4px) !important;
+  transition: all 0.3s ease !important;
+}
+
+.search-bar:focus, .search-bar:hover {
+  border-color: rgba(var(--foreground-rgb), 0.3) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1) !important;
+}
+
+.search-input {
+  background-color: transparent !important;
+  color: rgba(var(--foreground-rgb), 0.8) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Styles pour la barre de navigation en mode clair */
+.light-theme .navbar-menu {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.dark-theme .navbar-menu {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Style pour le bouton de thème */
+.theme-toggle-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  transition: transform 0.3s ease;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.theme-toggle-button:hover {
+  transform: scale(1.1);
+}
+
+/* L'overlay du popup reste sombre même en mode clair */
+.light-theme .backdrop-blur {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.light-theme .bg-black.bg-opacity-80 {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Ajustement des couleurs pour les cartes de poèmes en mode clair */
+.light-theme .text-gray-200 {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.light-theme .text-gray-400 {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Maintenir les couleurs d'origine pour le popup */
+.popup-content .text-gray-200,
+.popup-content .text-gray-400 {
+  color: inherit;
+}
+
+/* Style pour la bordure du footer */
+footer {
+  border-top: 1px solid;
+  border-image: linear-gradient(to right, transparent, rgba(192, 192, 192, 0.7), transparent) 1;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Couleur métallique pour le texte du footer */
+footer p {
+  background: linear-gradient(to bottom, #f0f0f0, #a0a0a0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
