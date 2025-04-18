@@ -33,7 +33,7 @@ const poems = [
     title: "Rivages",
     author: "Yacine",
     date: "5 mai 2024",
-    content: "Sur le rivage de tes yeux\nJe contemple l'océan\nDe tout ce que nous pourrions être\nDe tout ce que nous ne serons pas\nLes vagues de tes émotions\nViennent s'échouer sur mon cœur\nLaissant des traces éphémères\nQue la marée du temps efface"
+    content: "Sur le rivage de tes yeux\nJe contemple l'océan\nDe tout ce que nous pourrions être\nDe tout ce que nous ne serons pas\nLes vagues de tes émotions\nViennent s'échouer sur mon cœur\nLaissant des traces éphémères\nQue la marée du temps efface\nSur le rivage de tes yeux\nJe contemple l'océan\nDe tout ce que nous pourrions être\nDe tout ce que nous ne serons pas\nLes vagues de tes émotions\nViennent s'échouer sur mon cœur\nLaissant des traces éphémères\nQue la marée du temps efface"
   }
 ];
 

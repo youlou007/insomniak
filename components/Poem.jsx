@@ -18,7 +18,7 @@ const Poem = ({ poem, searchTerm, onReadMore, isCompact = false, noBorder = fals
     const parts = text.split(regex);
     
     return parts.map((part, i) => 
-      regex.test(part) ? <mark key={i} className="bg-[#00FFFF] text-black px-1 rounded">{part}</mark> : part
+      regex.test(part) ? <mark key={i} className="bg-[#D3D3D3] text-black px-1 rounded">{part}</mark> : part
     );
   };
 
