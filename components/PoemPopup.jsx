@@ -63,29 +63,31 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
       // Sauvegarder la position de défilement actuelle
       const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
       
+      // Faire défiler la page vers le haut avant de bloquer le défilement
+      window.scrollTo(0, 0);
+      
       // Appliquer immédiatement le blocage du défilement pour éviter tout saut
       document.body.classList.add('popup-open');
       
       // Appliquer directement le scroll top au body pour simuler un défilement vers le haut
       // sans utiliser window.scrollTo qui ne fonctionne pas correctement avec popup-open
-      document.body.style.top = `-${scrollPosition}px`;
+      document.body.style.top = '0px';
       
       // Définir isVisible à true après un court délai pour permettre les animations d'entrée
       const timer = setTimeout(() => setIsVisible(true), 100);
       
       return () => {
-        // Récupérer la position de défilement originale
-        const scrollY = parseInt(document.body.style.top || '0') * -1;
-        
         // Réactiver le défilement en supprimant la classe
         document.body.classList.remove('popup-open');
         document.body.style.top = '';
         
-        // Restaurer la position de défilement
-        window.scrollTo({
-          top: scrollY || scrollPosition,
-          behavior: 'smooth'
-        });
+        // Restaurer la position de défilement si nécessaire
+        if (scrollPosition > 0) {
+          window.scrollTo({
+            top: scrollPosition,
+            behavior: 'smooth'
+          });
+        }
         
         clearTimeout(timer);
       };
