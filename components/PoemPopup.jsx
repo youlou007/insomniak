@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PopupParticles from './PopupParticles';
-import { ThemeContext } from '../pages/_app.jsx';
+import { ThemeContext, PoemsVisibilityContext } from '../pages/_app.jsx';
 import { getAssetPath } from '../utils/assetPrefix';
 
 const PoemPopup = ({ poem, onClose, searchTerm }) => {
@@ -19,6 +19,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
   const searchInputRef = useRef(null);
   const scrollPositionRef = useRef(0);
   const { theme } = useContext(ThemeContext);
+  const { resetVisibility } = useContext(PoemsVisibilityContext);
   
   // Vérifier la taille de l'écran et ajuster les états en conséquence
   useEffect(() => {
@@ -72,7 +73,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
         if (currentPosition > 0) {
           // Calculer le déplacement avec une fonction d'easing
           const easing = function(t) { return 1 - Math.pow(1 - t, 3); };
-          const distance = Math.min(currentPosition * 0.3, 60); // Augmenté de 0.15 à 0.3 et de 30 à 60 pour un défilement plus rapide
+          const distance = Math.min(currentPosition * 0.3, 60); // Défilement plus rapide
           
           window.scrollTo(0, currentPosition - distance);
           
@@ -162,12 +163,15 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
   
   // Fonction pour gérer la fermeture avec animation
   const handleClose = () => {
-    // Désactiver d'abord la contrainte de fixed sur le body avant de commencer l'animation de fermeture
+    // Désactiver d'abord la contrainte de fixed sur le body
     document.body.classList.remove('popup-open');
     document.body.style.top = '';
     
     // Commencer l'animation de fermeture du popup
     setIsVisible(false);
+    
+    // Restaurer la visibilité de tous les poèmes
+    resetVisibility();
     
     // Attendre que l'animation de fermeture démarre avant de défiler
     requestAnimationFrame(() => {
@@ -184,7 +188,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
     });
   };
   
-  // Nouvelle fonction pour restaurer la position de défilement de manière fluide
+  // Fonction pour restaurer la position de défilement de manière fluide
   const restoreScrollPosition = () => {
     if (typeof window === 'undefined') return;
     
@@ -200,7 +204,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
     }
     
     let startTime = null;
-    const duration = 300; // Réduit de 600 à 300ms pour une animation plus rapide
+    const duration = 300; // Animation plus rapide (300ms)
     
     function scrollStep(timestamp) {
       if (!startTime) startTime = timestamp;

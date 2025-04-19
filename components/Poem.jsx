@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { PoemsVisibilityContext } from '../pages/_app';
 
 const Poem = ({ poem, searchTerm, onReadMore, isCompact = false, noBorder = false, centered = false }) => {
-  const { title, content, author, date } = poem;
+  const { title, content, author, date, id } = poem;
+  const { clickedPoemId, setClickedPoemId } = useContext(PoemsVisibilityContext);
+  const poemRef = useRef(null);
+  const [poemPosition, setPoemPosition] = useState(null);
 
   // Diviser le contenu en lignes
   const lines = content.split('\n');
@@ -27,12 +31,49 @@ const Poem = ({ poem, searchTerm, onReadMore, isCompact = false, noBorder = fals
 
   const textAlignment = centered ? "text-center" : "";
 
+  // Mesurer la position du poème au chargement
+  useEffect(() => {
+    if (poemRef.current) {
+      const rect = poemRef.current.getBoundingClientRect();
+      setPoemPosition({
+        top: rect.top + window.scrollY,
+        bottom: rect.bottom + window.scrollY,
+        height: rect.height
+      });
+    }
+  }, []);
+
+  // Gérer le clic sur un poème
+  const handlePoemClick = () => {
+    if (poemPosition) {
+      setClickedPoemId(id);
+    }
+    onReadMore(poem);
+  };
+
+  // Déterminer si ce poème doit être visible
+  const isVisible = clickedPoemId === null || clickedPoemId === id;
+
   return (
     <motion.div 
-      className={`${cardStyle} relative ${isCompact ? 'w-full' : 'w-full'} cursor-pointer poem-card`}
+      ref={poemRef}
+      className={`${cardStyle} relative ${isCompact ? 'w-full' : 'w-full'} cursor-pointer poem-card poem-card-transition`}
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
-      onClick={() => onReadMore(poem)}
+      onClick={handlePoemClick}
+      animate={{
+        opacity: isVisible ? 1 : 0,
+        height: isVisible ? 'auto' : 0,
+        marginTop: isVisible ? undefined : 0,
+        marginBottom: isVisible ? undefined : 0,
+        padding: isVisible ? '1rem' : 0,
+        overflow: 'hidden'
+      }}
+      style={{ 
+        opacity: isVisible ? 1 : 0,
+        height: isVisible ? 'auto' : 0,
+        pointerEvents: isVisible ? 'auto' : 'none'
+      }}
     >
       {/* Titre du poème */}
       <h3 className={`poetry-title text-2xl font-bold mb-3 ${textAlignment}`}>{highlightText(title)}</h3>

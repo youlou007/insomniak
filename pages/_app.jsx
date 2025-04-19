@@ -8,8 +8,18 @@ export const ThemeContext = createContext({
   toggleTheme: () => {},
 });
 
+// Créer un contexte pour la gestion des poèmes et popup
+export const PoemsVisibilityContext = createContext({
+  visiblePoems: {},
+  clickedPoemId: null,
+  setClickedPoemId: () => {},
+  resetVisibility: () => {},
+});
+
 function MyApp({ Component, pageProps }) {
   const [theme, setTheme] = useState('dark');
+  const [visiblePoems, setVisiblePoems] = useState({});
+  const [clickedPoemId, setClickedPoemId] = useState(null);
 
   // Fonction pour basculer entre les thèmes
   const toggleTheme = () => {
@@ -28,6 +38,12 @@ function MyApp({ Component, pageProps }) {
       // Stocker la préférence de thème dans localStorage
       localStorage.setItem('theme', newTheme);
     }
+  };
+
+  // Fonction pour réinitialiser la visibilité de tous les poèmes
+  const resetVisibility = () => {
+    setVisiblePoems({});
+    setClickedPoemId(null);
   };
 
   // Récupérer le thème préféré lors du chargement initial - uniquement côté client
@@ -73,7 +89,14 @@ function MyApp({ Component, pageProps }) {
         }} />
       </Head>
       <ThemeContext.Provider value={{ theme, toggleTheme }}>
-        <Component {...pageProps} />
+        <PoemsVisibilityContext.Provider value={{ 
+          visiblePoems, 
+          clickedPoemId, 
+          setClickedPoemId,
+          resetVisibility 
+        }}>
+          <Component {...pageProps} />
+        </PoemsVisibilityContext.Provider>
       </ThemeContext.Provider>
     </>
   );

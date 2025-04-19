@@ -475,6 +475,11 @@ body {
   box-shadow: none;
 }
 
+/* Animation pour masquer/afficher les poèmes */
+.poem-card-transition {
+  transition: opacity 0.3s ease, height 0.4s ease, margin 0.3s ease, padding 0.3s ease;
+}
+
 /* Effet de flou pour le popup */
 .backdrop-blur {
   backdrop-filter: blur(8px);
