@@ -44,7 +44,7 @@ export default function Home() {
       title: "Fleurter",
       author: "Yacine",
       date: "10 janvier 2024",
-      content: "\n\nLorsque l'amour est frivole\nLorsque les mots s'envolent\nLa douceur de ces lèvres\nSes paroles sont d'orfèvre\n\nLégère est sa beauté\nComme lourd est mon cœur\nNe pouvant lui avouer\nMe consume la peur\n\nUn lien si fragile\nPour de si belles paroles\nDes mots je suis peut-être agile\nC'est pour toi que mon amour s'envole"
+      content: "\n\nLorsque l'amour est frivole\nLorsque les mots s'envolent\nLa douceur de ces lèvres\nSes paroles sont d'orfèvre\n \nLégère est sa beauté\nComme lourd est mon cœur\nNe pouvant lui avouer\nMe consume la peur\n \nUn lien si fragile\nPour de si belles paroles\nDes mots je suis peut-être agile\nC'est pour toi que mon amour s'envole"
     },
     {
       id: 2,
