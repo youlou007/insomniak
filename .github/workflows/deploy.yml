@@ -24,7 +24,7 @@ jobs:
         run: npm ci
 
       - name: Build and Export 🔧
-        run: npm run build
+        run: npm run build && npm run export
 
       - name: Add .nojekyll file 📄
         run: touch out/.nojekyll
