@@ -471,11 +471,15 @@ export default function Home() {
         aria-label={theme === 'dark' ? 'Passer au thème clair' : 'Passer au thème sombre'}
       >
         <img 
-          src={getAssetPath(theme === 'dark' ? "/images/journuit button.png" : "/images/journuit button.png")}
+          src={getAssetPath("/images/journuit button.png")}
           alt={theme === 'dark' ? 'Mode jour' : 'Mode nuit'}
           width={60}
           height={60}
-          className="w-16 h-16 object-contain"
+          className={`w-16 h-16 object-contain ${theme === 'dark' ? 'opacity-100' : 'opacity-50 rotate-180'}`}
+          style={{ 
+            filter: theme === 'dark' ? 'none' : 'invert(0.8) hue-rotate(180deg)', 
+            transition: 'all 0.3s ease' 
+          }}
         />
       </button>
       
