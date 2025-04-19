@@ -16,6 +16,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
   const popupRef = useRef(null);
   const contentRef = useRef(null);
   const searchInputRef = useRef(null);
+  const scrollPositionRef = useRef(0);
   const { theme } = useContext(ThemeContext);
   
   // Vérifier la taille de l'écran et ajuster les états en conséquence
@@ -62,6 +63,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
     if (typeof window !== 'undefined') {
       // Sauvegarder la position de défilement actuelle
       const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      scrollPositionRef.current = scrollPosition;
       
       // Faire défiler la page vers le haut avant de bloquer le défilement
       window.scrollTo(0, 0);
@@ -82,11 +84,8 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
         document.body.style.top = '';
         
         // Restaurer la position de défilement si nécessaire
-        if (scrollPosition > 0) {
-          window.scrollTo({
-            top: scrollPosition,
-            behavior: 'smooth'
-          });
+        if (scrollPositionRef.current > 0) {
+          restoreScrollPosition();
         }
         
         clearTimeout(timer);
@@ -97,6 +96,38 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
+  
+  // Nouvelle fonction pour restaurer la position de défilement de manière fluide
+  const restoreScrollPosition = () => {
+    if (typeof window !== 'undefined') {
+      // Animation fluide pour revenir à la position précédente
+      const startPosition = window.pageYOffset;
+      const targetPosition = scrollPositionRef.current;
+      const distance = targetPosition - startPosition;
+      const duration = 800; // durée en ms
+      let startTime = null;
+      
+      // Fonction d'animation pour un défilement fluide
+      function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+        
+        // Fonction d'easing pour un défilement plus naturel
+        const easeOutCubic = progress => {
+          return 1 - Math.pow(1 - progress, 3);
+        };
+        
+        window.scrollTo(0, startPosition + distance * easeOutCubic(progress));
+        
+        if (timeElapsed < duration) {
+          window.requestAnimationFrame(animation);
+        }
+      }
+      
+      window.requestAnimationFrame(animation);
+    }
+  };
   
   // Initialiser la recherche locale avec le terme de recherche global
   useEffect(() => {
