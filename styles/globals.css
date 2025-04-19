@@ -2,18 +2,9 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* Déclaration de la police Summit */
-@font-face {
-  font-family: 'Summit';
-  /* Chemins relatifs pour les déploiements en local et sur GitHub Pages */
-  src: url('../public/font/SummitMedium-Inline.otf') format('opentype'),
-       url('../font/SummitMedium-Inline.otf') format('opentype'),
-       url('/font/SummitMedium-Inline.otf') format('opentype'),
-       url('/insomniak/font/SummitMedium-Inline.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+/* Import des polices Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
 
 /* Thème sombre (par défaut) */
 :root {
@@ -97,9 +88,11 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Titre avec la police Summit */
-.summit-font {
-  font-family: 'Summit', sans-serif;
+/* Titre avec police élégante pour la poésie */
+.poetry-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 @tailwind base;

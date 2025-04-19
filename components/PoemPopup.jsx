@@ -13,6 +13,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
   const [showMoreLines, setShowMoreLines] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm || '');
+  const [hasScrolledToTop, setHasScrolledToTop] = useState(false);
   const popupRef = useRef(null);
   const contentRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -57,77 +58,64 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
     }
   }, [isVisible]);
   
-  // Empêcher le défilement du body lorsque le popup est ouvert
+  // Gérer d'abord le défilement fluide vers le haut
   useEffect(() => {
-    // Vérifier si nous sommes côté client
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && !hasScrolledToTop) {
       // Sauvegarder la position de défilement actuelle
       const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
       scrollPositionRef.current = scrollPosition;
       
-      // Faire défiler la page vers le haut avant de bloquer le défilement
-      window.scrollTo(0, 0);
-      
-      // Appliquer immédiatement le blocage du défilement pour éviter tout saut
-      document.body.classList.add('popup-open');
-      
-      // Appliquer directement le scroll top au body pour simuler un défilement vers le haut
-      // sans utiliser window.scrollTo qui ne fonctionne pas correctement avec popup-open
-      document.body.style.top = '0px';
-      
-      // Définir isVisible à true après un court délai pour permettre les animations d'entrée
-      const timer = setTimeout(() => setIsVisible(true), 100);
-      
-      return () => {
-        // Réactiver le défilement en supprimant la classe
-        document.body.classList.remove('popup-open');
-        document.body.style.top = '';
+      // Défiler en douceur vers le haut avant de bloquer le défilement
+      const scrollToTop = () => {
+        const currentPosition = window.pageYOffset;
         
-        // Restaurer la position de défilement si nécessaire
-        if (scrollPositionRef.current > 0) {
-          restoreScrollPosition();
+        if (currentPosition > 0) {
+          // Calculer le déplacement avec une fonction d'easing
+          const easing = function(t) { return 1 - Math.pow(1 - t, 3); };
+          const distance = Math.min(currentPosition * 0.15, 30); // Plus rapide au début, ralentit vers la fin
+          
+          window.scrollTo(0, currentPosition - distance);
+          
+          // Continuer à défiler jusqu'à ce qu'on atteigne le haut
+          if (currentPosition - distance > 0) {
+            requestAnimationFrame(scrollToTop);
+          } else {
+            window.scrollTo(0, 0);
+            setHasScrolledToTop(true);
+          }
+        } else {
+          setHasScrolledToTop(true);
         }
-        
-        clearTimeout(timer);
       };
-    }
-    
-    // Si nous ne sommes pas côté client, simplement définir isVisible à true
-    const timer = setTimeout(() => setIsVisible(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-  
-  // Nouvelle fonction pour restaurer la position de défilement de manière fluide
-  const restoreScrollPosition = () => {
-    if (typeof window !== 'undefined') {
-      // Animation fluide pour revenir à la position précédente
-      const startPosition = window.pageYOffset;
-      const targetPosition = scrollPositionRef.current;
-      const distance = targetPosition - startPosition;
-      const duration = 800; // durée en ms
-      let startTime = null;
       
-      // Fonction d'animation pour un défilement fluide
-      function animation(currentTime) {
-        if (startTime === null) startTime = currentTime;
-        const timeElapsed = currentTime - startTime;
-        const progress = Math.min(timeElapsed / duration, 1);
-        
-        // Fonction d'easing pour un défilement plus naturel
-        const easeOutCubic = progress => {
-          return 1 - Math.pow(1 - progress, 3);
-        };
-        
-        window.scrollTo(0, startPosition + distance * easeOutCubic(progress));
-        
-        if (timeElapsed < duration) {
-          window.requestAnimationFrame(animation);
-        }
+      requestAnimationFrame(scrollToTop);
+    }
+  }, [hasScrolledToTop]);
+  
+  // Empêcher le défilement du body APRÈS être arrivé en haut
+  useEffect(() => {
+    if (!hasScrolledToTop || typeof window === 'undefined') return;
+    
+    // Appliquer le blocage du défilement seulement après être arrivé en haut
+    document.body.classList.add('popup-open');
+    document.body.style.top = '0px';
+    
+    // Définir isVisible à true après pour permettre les animations d'entrée
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    
+    return () => {
+      // Réactiver le défilement en supprimant la classe
+      document.body.classList.remove('popup-open');
+      document.body.style.top = '';
+      
+      // Restaurer la position de défilement si nécessaire
+      if (scrollPositionRef.current > 0) {
+        restoreScrollPosition();
       }
       
-      window.requestAnimationFrame(animation);
-    }
-  };
+      clearTimeout(timer);
+    };
+  }, [hasScrolledToTop]);
   
   // Initialiser la recherche locale avec le terme de recherche global
   useEffect(() => {
@@ -174,8 +162,66 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
   
   // Fonction pour gérer la fermeture avec animation
   const handleClose = () => {
+    // Désactiver d'abord la contrainte de fixed sur le body avant de commencer l'animation de fermeture
+    document.body.classList.remove('popup-open');
+    document.body.style.top = '';
+    
+    // Commencer l'animation de fermeture du popup
     setIsVisible(false);
-    setTimeout(onClose, 500); // Attendre la fin de l'animation avant de fermer
+    
+    // Attendre que l'animation de fermeture démarre avant de défiler
+    requestAnimationFrame(() => {
+      // Restaurer la position de défilement de manière fluide
+      if (scrollPositionRef.current > 0) {
+        restoreScrollPosition();
+      }
+      
+      // Réinitialiser l'état de défilement et fermer le popup après l'animation complète
+      setTimeout(() => {
+        setHasScrolledToTop(false);
+        onClose();
+      }, 500);
+    });
+  };
+  
+  // Nouvelle fonction pour restaurer la position de défilement de manière fluide
+  const restoreScrollPosition = () => {
+    if (typeof window === 'undefined') return;
+    
+    // Animation fluide pour revenir à la position précédente
+    const startPosition = window.pageYOffset || 0;
+    const targetPosition = scrollPositionRef.current;
+    const totalDistance = targetPosition - startPosition;
+    
+    // Aucun défilement nécessaire si la distance est négligeable
+    if (Math.abs(totalDistance) < 10) {
+      window.scrollTo(0, targetPosition);
+      return;
+    }
+    
+    let startTime = null;
+    const duration = 600; // Plus court que l'animation d'ouverture
+    
+    function scrollStep(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Fonction d'easing pour un défilement plus naturel (accélération puis décélération)
+      const easeInOutQuad = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      
+      // Calculer la nouvelle position
+      const currentPos = startPosition + totalDistance * easeInOutQuad(progress);
+      window.scrollTo(0, currentPos);
+      
+      // Continuer l'animation si elle n'est pas terminée
+      if (progress < 1) {
+        requestAnimationFrame(scrollStep);
+      }
+    }
+    
+    // Lancer l'animation
+    requestAnimationFrame(scrollStep);
   };
 
   // Calculer les styles du popup en fonction de la taille de l'écran
@@ -303,10 +349,21 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
     }
   };
 
+  // Référence pour vérifier si le contenu est scrollable
+  const [needsScroll, setNeedsScroll] = useState(false);
+  
+  // Vérifier si le contenu nécessite un défilement
+  useEffect(() => {
+    if (contentRef.current) {
+      const isScrollable = contentRef.current.scrollHeight > contentRef.current.clientHeight;
+      setNeedsScroll(isScrollable);
+    }
+  }, [isVisible, popupWidth, poem.content]);
+
   // Calculer la hauteur du conteneur de texte en fonction de la taille du popup
   const getContentContainerStyle = () => {
     // Nombre maximum de lignes visibles avant défilement
-    const maxVisibleLines = 14;
+    const maxVisibleLines = 16;
     
     // Hauteur approximative d'une ligne de texte en pixels, selon la taille du texte
     let lineHeight;
@@ -447,11 +504,11 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
             popupWidth={popupWidth}
           />
           
-          <h2 className={`font-bold ${getTextSizeClass('title')} ${getSpacingClass('title')}`}>
+          <h2 className={`poetry-title font-bold ${getTextSizeClass('title')} ${getSpacingClass('title')}`}>
             {highlightText(poem.title)}
           </h2>
           <div className={`text-gray-400 ${getTextSizeClass('meta')} ${getSpacingClass('meta')}`}>
-            {poem.author && <span>Par {highlightText(poem.author)}</span>}
+            {poem.author && <span>{highlightText(poem.author)}</span>}
             {poem.date && <span className="ml-2">• {poem.date}</span>}
           </div>
           
@@ -468,8 +525,8 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
               </div>
             ))}
             
-            {/* Indicateur de défilement si le poème est long */}
-            {poem.content.split('\n').length > 14 && !showMoreLines && (
+            {/* Indicateur de défilement seulement si le poème est plus long que 16 lignes */}
+            {needsScroll && !showMoreLines && (
               <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none flex justify-center items-end">
                 <div className="w-5 h-5 border-b-2 border-r-2 border-gray-300 border-opacity-60 transform rotate-45 mb-1 animate-bounce-subtle"></div>
               </div>

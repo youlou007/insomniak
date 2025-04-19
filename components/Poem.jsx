@@ -34,9 +34,10 @@ const Poem = ({ poem, searchTerm, onReadMore, isCompact = false, noBorder = fals
       transition={{ duration: 0.2 }}
       onClick={() => onReadMore(poem)}
     >
-      <h3 className={`text-xl font-semibold mb-2 ${textAlignment}`}>{highlightText(title)}</h3>
+      {/* Titre du poème */}
+      <h3 className={`poetry-title text-xl font-semibold mb-2 ${textAlignment}`}>{highlightText(title)}</h3>
       <div className={`text-sm text-gray-400 mb-3 ${textAlignment}`}>
-        {author && <span>Par {highlightText(author)}</span>}
+        {author && <span>{highlightText(author)}</span>}
         {date && <span className="ml-2">• {date}</span>}
       </div>
       
