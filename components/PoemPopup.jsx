@@ -279,7 +279,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
     if (!popupWidth) {
       // Utiliser screenWidth comme fallback
       if (type === 'title') {
-        return isNarrow ? 'text-xl' : isMobile ? 'text-2xl' : 'text-3xl';
+        return isNarrow ? 'text-2xl' : isMobile ? 'text-3xl' : 'text-4xl';
       } else if (type === 'meta') {
         return isNarrow ? 'text-xs' : isMobile ? 'text-sm' : 'text-base';
       } else if (type === 'content') {
@@ -289,10 +289,10 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
     
     // Utiliser popupWidth pour un dimensionnement plus précis
     if (type === 'title') {
-      if (popupWidth < 200) return 'text-lg';
-      if (popupWidth < 250) return 'text-xl';
-      if (popupWidth < 350) return 'text-2xl';
-      return 'text-3xl';
+      if (popupWidth < 200) return 'text-xl';
+      if (popupWidth < 250) return 'text-2xl';
+      if (popupWidth < 350) return 'text-3xl';
+      return 'text-4xl';
     } else if (type === 'meta') {
       if (popupWidth < 200) return 'text-xs';
       if (popupWidth < 300) return 'text-sm';
@@ -504,7 +504,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
             popupWidth={popupWidth}
           />
           
-          <h2 className={`poetry-title font-bold ${getTextSizeClass('title')} ${getSpacingClass('title')}`}>
+          <h2 className={`poetry-title font-extrabold tracking-wide ${getTextSizeClass('title')} ${getSpacingClass('title')}`}>
             {highlightText(poem.title)}
           </h2>
           <div className={`text-gray-400 ${getTextSizeClass('meta')} ${getSpacingClass('meta')}`}>
