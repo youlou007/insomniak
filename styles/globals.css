@@ -93,6 +93,18 @@ a:hover {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
   letter-spacing: 1px;
+  position: relative;
+  color: var(--text-color);
+  text-shadow: 0 0 5px var(--text-color),
+               0 0 10px var(--text-color);
+}
+
+/* On supprime l'animation de pulsation */
+
+/* On supprime les styles spécifiques pour le thème clair car l'effet fonctionnera
+   avec les variables CSS qui s'adaptent déjà au thème */
+.light-theme .poetry-title {
+  /* Les styles sont maintenant gérés par les variables */
 }
 
 @tailwind base;
