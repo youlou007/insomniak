@@ -46,10 +46,11 @@ export default function Home() {
     setIsLoading(true);
     
     try {
-      // Utiliser l'API pour charger les poèmes
+      // Utiliser l'API pour charger les poèmes en tenant compte du basePath
+      const basePath = process.env.NODE_ENV === 'production' ? '/insomniak' : '';
       const apiUrl = query 
-        ? `/api/poems?query=${encodeURIComponent(query)}` 
-        : '/api/poems';
+        ? `${basePath}/api/poems?query=${encodeURIComponent(query)}` 
+        : `${basePath}/api/poems`;
         
       const response = await fetch(apiUrl);
       
@@ -66,6 +67,16 @@ export default function Home() {
       setPoems(data);
     } catch (error) {
       console.error("Erreur:", error);
+      // En cas d'erreur, afficher au moins quelques poèmes par défaut pour éviter une page vide
+      setPoems([
+        {
+          id: 1,
+          title: "Erreur de chargement",
+          author: "Yacine",
+          date: "10 janvier 2024",
+          content: "Impossible de charger les poèmes depuis l'API.\nVeuillez réessayer plus tard."
+        }
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -264,7 +275,7 @@ export default function Home() {
       
       {/* Bouton de basculement de thème */}
       <button 
-        className="theme-toggle-button"
+        className="theme-toggle-button fixed top-4 left-4 z-50"
         onClick={toggleTheme}
         aria-label={theme === 'dark' ? 'Passer au thème clair' : 'Passer au thème sombre'}
       >
@@ -307,6 +318,10 @@ export default function Home() {
                 value={searchTerm}
                 onChange={handleSearchInput}
                 className="w-full border rounded-lg py-2 pl-4 pr-10 search-input"
+                style={{
+                  backgroundColor: theme === 'dark' ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                  color: theme === 'dark' ? '#fff' : '#000'
+                }}
               />
               {searchTerm && (
                 <button 
@@ -335,14 +350,16 @@ export default function Home() {
         
         <main className="pt-10 max-w-7xl mx-auto px-4 flex-grow">
           {isLoading ? (
-            <div className="text-center py-12">Chargement...</div>
+            <div className="text-center py-12 flex items-center justify-center h-screen">
+              <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900 dark:border-white"></div>
+            </div>
           ) : poems.length > 0 ? (
             <>
               {/* Section avec le titre et la main */}
-              <div className="min-h-screen flex flex-col justify-start items-center relative pt-10">
+              <div className="flex flex-col justify-start items-center relative pt-10">
                 {/* Titre séparé de l'image de la main */}
-                <div className="w-full text-center mb-0">
-                  <h1 className={`font-bold font-blocky ${isMobile ? 'text-4xl md:text-6xl' : 'text-8xl'}`}>
+                <div className="w-full text-center mb-8">
+                  <h1 className={`font-bold ${isMobile ? 'text-4xl md:text-6xl' : 'text-8xl'}`}>
                     Yacine - L'encre des insomnies
                   </h1>
                 </div>
@@ -352,8 +369,21 @@ export default function Home() {
               </div>
             </>
           ) : (
-            <div className="text-center py-12 min-h-[500px]">
-              {searchTerm ? `Aucun poème trouvé pour "${searchTerm}"` : "Aucun poème disponible"}
+            <div className="text-center py-12 min-h-[500px] flex items-center justify-center">
+              <div>
+                <h1 className="text-4xl mb-4">Aucun poème trouvé</h1>
+                {searchTerm ? (
+                  <p className="text-xl">Aucun résultat pour "{searchTerm}"</p>
+                ) : (
+                  <p className="text-xl">Impossible de charger les poèmes.</p>
+                )}
+                <button 
+                  onClick={handleReturnToAllPoems}
+                  className="mt-4 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-gray-300"
+                >
+                  Retour à tous les poèmes
+                </button>
+              </div>
             </div>
           )}
         </main>
