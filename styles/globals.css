@@ -5,7 +5,10 @@
 /* Déclaration de la police Summit */
 @font-face {
   font-family: 'Summit';
-  src: url('/font/SummitMedium-Inline.otf') format('opentype'),
+  /* Chemins relatifs pour les déploiements en local et sur GitHub Pages */
+  src: url('../public/font/SummitMedium-Inline.otf') format('opentype'),
+       url('../font/SummitMedium-Inline.otf') format('opentype'),
+       url('/font/SummitMedium-Inline.otf') format('opentype'),
        url('/insomniak/font/SummitMedium-Inline.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
