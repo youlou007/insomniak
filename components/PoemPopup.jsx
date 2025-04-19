@@ -72,7 +72,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
         if (currentPosition > 0) {
           // Calculer le déplacement avec une fonction d'easing
           const easing = function(t) { return 1 - Math.pow(1 - t, 3); };
-          const distance = Math.min(currentPosition * 0.15, 30); // Plus rapide au début, ralentit vers la fin
+          const distance = Math.min(currentPosition * 0.3, 60); // Augmenté de 0.15 à 0.3 et de 30 à 60 pour un défilement plus rapide
           
           window.scrollTo(0, currentPosition - distance);
           
@@ -200,7 +200,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
     }
     
     let startTime = null;
-    const duration = 600; // Plus court que l'animation d'ouverture
+    const duration = 300; // Réduit de 600 à 300ms pour une animation plus rapide
     
     function scrollStep(timestamp) {
       if (!startTime) startTime = timestamp;
