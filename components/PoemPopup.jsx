@@ -58,35 +58,42 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
   
   // Empêcher le défilement du body lorsque le popup est ouvert
   useEffect(() => {
-    // Sauvegarder la position de défilement actuelle
-    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    // Vérifier si nous sommes côté client
+    if (typeof window !== 'undefined') {
+      // Sauvegarder la position de défilement actuelle
+      const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Appliquer immédiatement le blocage du défilement pour éviter tout saut
+      document.body.classList.add('popup-open');
+      
+      // Appliquer directement le scroll top au body pour simuler un défilement vers le haut
+      // sans utiliser window.scrollTo qui ne fonctionne pas correctement avec popup-open
+      document.body.style.top = `-${scrollPosition}px`;
+      
+      // Définir isVisible à true après un court délai pour permettre les animations d'entrée
+      const timer = setTimeout(() => setIsVisible(true), 100);
+      
+      return () => {
+        // Récupérer la position de défilement originale
+        const scrollY = parseInt(document.body.style.top || '0') * -1;
+        
+        // Réactiver le défilement en supprimant la classe
+        document.body.classList.remove('popup-open');
+        document.body.style.top = '';
+        
+        // Restaurer la position de défilement
+        window.scrollTo({
+          top: scrollY || scrollPosition,
+          behavior: 'smooth'
+        });
+        
+        clearTimeout(timer);
+      };
+    }
     
-    // Appliquer immédiatement le blocage du défilement pour éviter tout saut
-    document.body.classList.add('popup-open');
-    
-    // Appliquer directement le scroll top au body pour simuler un défilement vers le haut
-    // sans utiliser window.scrollTo qui ne fonctionne pas correctement avec popup-open
-    document.body.style.top = `-${scrollPosition}px`;
-    
-    // Définir isVisible à true après un court délai pour permettre les animations d'entrée
+    // Si nous ne sommes pas côté client, simplement définir isVisible à true
     const timer = setTimeout(() => setIsVisible(true), 100);
-    
-    return () => {
-      // Récupérer la position de défilement originale
-      const scrollY = parseInt(document.body.style.top || '0') * -1;
-      
-      // Réactiver le défilement en supprimant la classe
-      document.body.classList.remove('popup-open');
-      document.body.style.top = '';
-      
-      // Restaurer la position de défilement
-      window.scrollTo({
-        top: scrollY || scrollPosition,
-        behavior: 'smooth'
-      });
-      
-      clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, []);
   
   // Initialiser la recherche locale avec le terme de recherche global

@@ -33,12 +33,23 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     // Vérifier si nous sommes côté client
     if (typeof window !== 'undefined') {
+      // Récupérer le thème sauvegardé ou utiliser 'dark' par défaut
       const savedTheme = localStorage.getItem('theme');
+      
+      // Si un thème est sauvegardé, l'appliquer
       if (savedTheme) {
         setTheme(savedTheme);
         if (savedTheme === 'light') {
           document.documentElement.classList.add('light-theme');
+        } else {
+          // S'assurer que la classe light-theme est retirée pour le thème sombre
+          document.documentElement.classList.remove('light-theme');
         }
+      } else {
+        // Si aucun thème n'est sauvegardé, définir 'dark' comme thème par défaut
+        setTheme('dark');
+        document.documentElement.classList.remove('light-theme');
+        localStorage.setItem('theme', 'dark');
       }
     }
   }, []);

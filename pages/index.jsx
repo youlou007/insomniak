@@ -459,6 +459,7 @@ export default function Home() {
       <Head>
         <title>Yacine, insomniak - Poèmes</title>
         <meta name="description" content="Collection de poèmes de Yacine" />
+        <meta name="theme-color" content={theme === 'dark' ? '#000000' : '#ffffff'} />
         <link rel="icon" href={getAssetPath("/favicon.ico")} />
       </Head>
 
