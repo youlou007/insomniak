@@ -5,7 +5,7 @@ import Particles from '../components/Particles';
 import Poem from '../components/Poem';
 import PoemPopup from '../components/PoemPopup';
 import Image from 'next/image';
-import { ThemeContext } from './_app';
+import { ThemeContext } from './_app.jsx';
 import { getAssetPath } from '../utils/assetPrefix';
 
 export default function Home() {

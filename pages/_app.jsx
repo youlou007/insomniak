@@ -15,24 +15,30 @@ function MyApp({ Component, pageProps }) {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
     
-    // Appliquer ou retirer la classe light-theme au body
-    if (newTheme === 'light') {
-      document.documentElement.classList.add('light-theme');
-    } else {
-      document.documentElement.classList.remove('light-theme');
+    // Vérifier si nous sommes côté client
+    if (typeof window !== 'undefined') {
+      // Appliquer ou retirer la classe light-theme au body
+      if (newTheme === 'light') {
+        document.documentElement.classList.add('light-theme');
+      } else {
+        document.documentElement.classList.remove('light-theme');
+      }
+      
+      // Stocker la préférence de thème dans localStorage
+      localStorage.setItem('theme', newTheme);
     }
-    
-    // Stocker la préférence de thème dans localStorage
-    localStorage.setItem('theme', newTheme);
   };
 
-  // Récupérer le thème préféré lors du chargement initial
+  // Récupérer le thème préféré lors du chargement initial - uniquement côté client
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-      if (savedTheme === 'light') {
-        document.documentElement.classList.add('light-theme');
+    // Vérifier si nous sommes côté client
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        setTheme(savedTheme);
+        if (savedTheme === 'light') {
+          document.documentElement.classList.add('light-theme');
+        }
       }
     }
   }, []);

@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PopupParticles from './PopupParticles';
-import { ThemeContext } from '../pages/_app';
+import { ThemeContext } from '../pages/_app.jsx';
 import { getAssetPath } from '../utils/assetPrefix';
 
 const PoemPopup = ({ poem, onClose, searchTerm }) => {
