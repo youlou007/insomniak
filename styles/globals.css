@@ -5,19 +5,27 @@
 /* Déclaration de la police Summit */
 @font-face {
   font-family: 'Summit';
-  src: url('/insomniak/font/SummitMedium-Inline.otf') format('opentype');
+  src: url('/font/SummitMedium-Inline.otf') format('opentype'),
+       url('/insomniak/font/SummitMedium-Inline.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 /* Thème sombre (par défaut) */
-.dark-theme {
+:root {
   --bg-color: #000000;
   --text-color: #ffffff;
   --accent-color: #9370DB; /* Violet pastel */
   color: var(--text-color);
   background-color: var(--bg-color);
+  
+  /* Pour les particules et autres éléments */
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 0, 0, 0;
+  --particle-color: 255, 255, 255;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Thème clair */
@@ -27,6 +35,13 @@
   --accent-color: #9370DB; /* Violet pastel */
   color: var(--text-color);
   background-color: var(--bg-color);
+  
+  /* Pour les particules et autres éléments */
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+  --particle-color: 0, 0, 0;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Styles globaux */
@@ -87,24 +102,6 @@ a:hover {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  /* Thème sombre (par défaut) */
-  --foreground-rgb: 255, 255, 255;
-  --background-rgb: 0, 0, 0;
-  --particle-color: 255, 255, 255;
-  --border-color: rgba(255, 255, 255, 0.1);
-  --shadow-color: rgba(0, 0, 0, 0.5);
-}
-
-/* Thème clair */
-.light-theme {
-  --foreground-rgb: 0, 0, 0;
-  --background-rgb: 255, 255, 255;
-  --particle-color: 0, 0, 0;
-  --border-color: rgba(0, 0, 0, 0.1);
-  --shadow-color: rgba(0, 0, 0, 0.1);
-}
 
 /* Thème clair - texte des poèmes dans les cartes */
 .light-theme .poem-card {

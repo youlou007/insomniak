@@ -1,4 +1,5 @@
 import { useState, createContext, useEffect } from 'react';
+import Head from 'next/head';
 import '../styles/globals.css';
 
 // Créer un contexte pour le thème
@@ -17,7 +18,7 @@ function MyApp({ Component, pageProps }) {
     
     // Vérifier si nous sommes côté client
     if (typeof window !== 'undefined') {
-      // Appliquer ou retirer la classe light-theme au body
+      // Appliquer ou retirer la classe light-theme au document
       if (newTheme === 'light') {
         document.documentElement.classList.add('light-theme');
       } else {
@@ -55,9 +56,26 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      <Component {...pageProps} />
-    </ThemeContext.Provider>
+    <>
+      <Head>
+        {/* Script pour éviter le flash de contenu lors du chargement */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              try {
+                var savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'light') {
+                  document.documentElement.classList.add('light-theme');
+                }
+              } catch (e) {}
+            })();
+          `
+        }} />
+      </Head>
+      <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <Component {...pageProps} />
+      </ThemeContext.Provider>
+    </>
   );
 }
 
