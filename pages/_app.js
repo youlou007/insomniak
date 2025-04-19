@@ -29,21 +29,9 @@ function MyApp({ Component, pageProps }) {
   };
   
   return (
-    <>
-      {/* Ajout de la police Summit */}
-      <style jsx global>{`
-        @font-face {
-          font-family: 'Summit';
-          src: url('https://lisidesign.com/font/summit') format('woff2');
-          font-weight: normal;
-          font-style: normal;
-          font-display: swap;
-        }
-      `}</style>
-      <ThemeContext.Provider value={{ theme, toggleTheme }}>
-        <Component {...pageProps} />
-      </ThemeContext.Provider>
-    </>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <Component {...pageProps} />
+    </ThemeContext.Provider>
   );
 }
 

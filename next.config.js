@@ -12,13 +12,7 @@ const nextConfig = {
   trailingSlash: true,
   images: {
     unoptimized: true,
-  },
-  // Configuration pour les polices externes
-  experimental: {
-    fontLoaders: [
-      { loader: '@next/font/google', options: { subsets: ['latin'] } },
-    ],
-  },
+  }
 };
 
 module.exports = nextConfig; 

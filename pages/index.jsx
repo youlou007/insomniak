@@ -457,7 +457,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <Head>
-        <title>Yacine, pensées nocturnes - Poèmes</title>
+        <title>Yacine, insomniak - Poèmes</title>
         <meta name="description" content="Collection de poèmes de Yacine" />
         <link rel="icon" href={getAssetPath("/favicon.ico")} />
       </Head>
@@ -471,7 +471,7 @@ export default function Home() {
         aria-label={theme === 'dark' ? 'Passer au thème clair' : 'Passer au thème sombre'}
       >
         <img 
-          src={getAssetPath("/images/journuit button.png")}
+          src={getAssetPath(theme === 'dark' ? "/images/journuit button.png" : "/images/journuit button.png")}
           alt={theme === 'dark' ? 'Mode jour' : 'Mode nuit'}
           width={60}
           height={60}
