@@ -44,35 +44,35 @@ export default function Home() {
       title: "Fleurter",
       author: "Yacine",
       date: "10 janvier 2024",
-      content: "Lorsque l'amour est frivole\nLorsque les mots s'envolent\nLa douceur de ces lèvres\nSes paroles sont d'orfèvre\n\nLégère est sa beauté\nComme lourd est mon cœur\nNe pouvant lui avouer\nMe consume la peur\n\nUn lien si fragile\nPour de si belles paroles\nDes mots je suis peut-être agile\nC'est pour toi que mon amour s'envole"
+      content: "\n\nLorsque l'amour est frivole\nLorsque les mots s'envolent\nLa douceur de ces lèvres\nSes paroles sont d'orfèvre\n\nLégère est sa beauté\nComme lourd est mon cœur\nNe pouvant lui avouer\nMe consume la peur\n\nUn lien si fragile\nPour de si belles paroles\nDes mots je suis peut-être agile\nC'est pour toi que mon amour s'envole"
     },
     {
       id: 2,
       title: "Faux Souvenir",
       author: "Yacine",
       date: "15 janvier 2024",
-      content: "C'est à jamais que je te grave\nDans les tréfonds de ma mémoire\nMes pensées tu accapares\nDu matin jusqu'au soir\n\nLorsqu'à mon cœur vient ta pensée\nLes émotions commencent à me dépasser\nJamais de mon cœur je ne pourrais t'effacer\n\nEn ces quelques phrases pleines de maladresses\nJe t'adresse toute ma tendresse\nTe témoignant ainsi mon amour\nCar c'est toi que j'aimerais pour toujours."
+      content: "\n\nC'est à jamais que je te grave\nDans les tréfonds de ma mémoire\nMes pensées tu accapares\nDu matin jusqu'au soir\n\nLorsqu'à mon cœur vient ta pensée\nLes émotions commencent à me dépasser\nJamais de mon cœur je ne pourrais t'effacer\n\nEn ces quelques phrases pleines de maladresses\nJe t'adresse toute ma tendresse\nTe témoignant ainsi mon amour\nCar c'est toi que j'aimerais pour toujours."
     },
     {
       id: 3,
       title: "Accaparant",
       author: "Yacine",
       date: "20 janvier 2024",
-      content: "Accaparant mon esprit\nSon parfum enivrant\nJ'en rêve toute la nuit\nMon esprit se ment\n\nTrouble devient ma vue\nCe n'est qu'elle que je vois\nTout ce que je passe en revue\nD'elle mon cœur aboie\n\nSaurais-je élever mes mots \nEt non pas ma voix \nVoudrais-tu cet anneau \nCar je n'aime que toi"
+      content: "\n\nAccaparant mon esprit\nSon parfum enivrant\nJ'en rêve toute la nuit\nMon esprit se ment\n\nTrouble devient ma vue\nCe n'est qu'elle que je vois\nTout ce que je passe en revue\nD'elle mon cœur aboie\n\nSaurais-je élever mes mots \nEt non pas ma voix \nVoudrais-tu cet anneau \nCar je n'aime que toi"
     },
     {
       id: 4,
       title: "Clair noirceur",
       author: "Yacine",
       date: "25 janvier 2024",
-      content: "Lorsqu'à la lumière de ses yeux\nMes craintes crament\nQuand la clarté de son cœur\nBouscule la noirceur de mon âme\n\nPerdu sur ce doux chemin\nRêvant parfois d'effleurer tes mains\nMe serrant contre toi\nM'imprégnant de ton doux parfum\n\nUne plume manquant de finesse\nJ'agence ces mots de manière grotesque\nDe côté, ton sourire, j'admire\nNe te regardant pas par peur de te nuire\n\nMon cœur t'adressant ces mots\nSe jouant des limites des interdits\nT'aimant malgré les maux\nSans peur de chuter dans l'infini\n\nCelui de mes sentiments\nBien que le canevas soit noir\nMa plume est immaculée de blanc\nUn sentiment sans pouvoir le voir\n\nComme porté par le vent\nJ'aimerais parfois le crier\nMon âme brûle\nUne flamme s'éveille\n\nFaible pourtant cinglante\nGrandissant par battements\nHier d'amour aujourd'hui sanglante\nMaintenant au chaud ce froid volcan\n\nPenché à son sommet\nSous ce doux ciel étoilé\nDes sentiments tels un phare\nMon cœur s'apaise car\n\nAu clair de ses yeux\nJe lui offre mon âme"
+      content: "\n\nLorsqu'à la lumière de ses yeux\nMes craintes crament\nQuand la clarté de son cœur\nBouscule la noirceur de mon âme\n\nPerdu sur ce doux chemin\nRêvant parfois d'effleurer tes mains\nMe serrant contre toi\nM'imprégnant de ton doux parfum\n\nUne plume manquant de finesse\nJ'agence ces mots de manière grotesque\nDe côté, ton sourire, j'admire\nNe te regardant pas par peur de te nuire\n\nMon cœur t'adressant ces mots\nSe jouant des limites des interdits\nT'aimant malgré les maux\nSans peur de chuter dans l'infini\n\nCelui de mes sentiments\nBien que le canevas soit noir\nMa plume est immaculée de blanc\nUn sentiment sans pouvoir le voir\n\nComme porté par le vent\nJ'aimerais parfois le crier\nMon âme brûle\nUne flamme s'éveille\n\nFaible pourtant cinglante\nGrandissant par battements\nHier d'amour aujourd'hui sanglante\nMaintenant au chaud ce froid volcan\n\nPenché à son sommet\nSous ce doux ciel étoilé\nDes sentiments tels un phare\nMon cœur s'apaise car\n\nAu clair de ses yeux\nJe lui offre mon âme"
     },
     {
       id: 5,
       title: "Perpétuel",
       author: "Yacine",
       date: "30 janvier 2024",
-      content: "On a un pouvoir\nCelui d'aimer quelqu'un\nMême si on ne peut se voir\nEn vérité on ne fait qu'un\n\nEn quête d'expression de mes sentiments ,\nTe dire tout ce que je ressens\nPour toi je ressens cette chose,\nQui me métamorphose.\n\nCette perception inexplicable,\nC'est mon amour inébranlable.\nQui transforme mon coeur,\nEn y ajoutant une touche de douceur\n\nSi je venais un jour à mourir\nJe ne te dirais pas je t'aime\nAinsi ce regret infini\nM'attachera à cette vie\nEt ces liens ne pouvant être défaits\nUne part de moi restera à tes côtés"
+      content: "\n\nOn a un pouvoir\nCelui d'aimer quelqu'un\nMême si on ne peut se voir\nEn vérité on ne fait qu'un\n\nEn quête d'expression de mes sentiments ,\nTe dire tout ce que je ressens\nPour toi je ressens cette chose,\nQui me métamorphose.\n\nCette perception inexplicable,\nC'est mon amour inébranlable.\nQui transforme mon coeur,\nEn y ajoutant une touche de douceur\n\nSi je venais un jour à mourir\nJe ne te dirais pas je t'aime\nAinsi ce regret infini\nM'attachera à cette vie\nEt ces liens ne pouvant être défaits\nUne part de moi restera à tes côtés"
     },
     {
       id: 6,

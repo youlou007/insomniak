@@ -266,7 +266,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
   // Calculer la hauteur du conteneur de texte en fonction de la taille du popup
   const getContentContainerStyle = () => {
     // Nombre maximum de lignes visibles avant défilement
-    const maxVisibleLines = 8;
+    const maxVisibleLines = 14;
     
     // Hauteur approximative d'une ligne de texte en pixels, selon la taille du texte
     let lineHeight;
@@ -429,7 +429,7 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
             ))}
             
             {/* Indicateur de défilement si le poème est long */}
-            {poem.content.split('\n').length > 8 && !showMoreLines && (
+            {poem.content.split('\n').length > 14 && !showMoreLines && (
               <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none flex justify-center items-end">
                 <div className="w-5 h-5 border-b-2 border-r-2 border-gray-300 border-opacity-60 transform rotate-45 mb-1 animate-bounce-subtle"></div>
               </div>
