@@ -17,6 +17,7 @@ export default function Home() {
   const [selectedPoem, setSelectedPoem] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const originalPoemsRef = useRef([]);
   const menuRef = useRef(null);
 
@@ -24,6 +25,8 @@ export default function Home() {
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768);
+      // Reset à la page 1 quand on change de mode
+      setCurrentPage(1);
     };
     
     // Vérifier au chargement
@@ -40,7 +43,7 @@ export default function Home() {
   // Données des poèmes directement intégrées (plutôt que de les charger via l'API)
   const poemsData = [
     {
-      id: 1,
+      id: 67,
       title: "Fleurter",
       author: "Yacine",
       date: "2024",
@@ -54,7 +57,7 @@ export default function Home() {
       content: "\n\nC'est à jamais que je te grave\nDans les tréfonds de ma mémoire\nMes pensées tu accapares\nDu matin jusqu'au soir\n...\nLorsqu'à mon cœur vient ta pensée\nLes émotions commencent à me dépasser\nJamais de mon cœur je ne pourrais t'effacer\n...\nEn ces quelques phrases pleines de maladresses\nJe t'adresse toute ma tendresse\nTe témoignant ainsi mon amour\nCar c'est toi que j'aimerai pour toujours."
     },
     {
-      id: 3,
+      id: 1,
       title: "Accaparant",
       author: "Yacine",
       date: "2024",
@@ -266,6 +269,9 @@ export default function Home() {
         setPoems(poemsData);
         originalPoemsRef.current = poemsData;
       }
+      
+      // Réinitialiser la pagination à la page 1 lors de la recherche
+      setCurrentPage(1);
     } catch (error) {
       console.error("Erreur:", error);
     } finally {
@@ -286,6 +292,43 @@ export default function Home() {
     fetchPoems(value);
   }
 
+  // Configuration de la pagination
+  const itemsPerPage = isMobile ? 5 : 10;
+  const totalPages = Math.ceil(poems.length / itemsPerPage);
+
+  // Calculer les poèmes à afficher pour la page actuelle
+  const getVisiblePoems = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return poems.slice(startIndex, endIndex);
+  };
+
+  // Navigation entre les pages
+  const goToPage = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+      // Scroll en haut après changement de page
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Navigation à la page suivante
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
+
+  // Navigation à la page précédente
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  };
+
   // Fonction pour ouvrir le popup d'un poème
   const handleOpenPoem = (poem) => {
     setSelectedPoem(poem);
@@ -305,7 +348,9 @@ export default function Home() {
 
   // Séparer les poèmes pour l'affichage spécial
   const featuredPoems = poems.slice(0, 2);
-  const regularPoems = poems.slice(2);
+  const regularPoems = isMobile 
+    ? getVisiblePoems() 
+    : getVisiblePoems().slice(2);
 
   // Fonction pour ouvrir le menu de recherche
   const openSearchMenu = () => {
@@ -351,8 +396,89 @@ export default function Home() {
     };
   };
 
+  // Fonction pour créer une barre de pagination
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    // Déterminer quels numéros de page afficher (maximum 5 visibles)
+    let pageNumbers = [];
+    if (totalPages <= 5) {
+      // Moins de 5 pages, montrer toutes les pages
+      pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+    } else {
+      // Plus de 5 pages, montrer les pages intelligemment
+      if (currentPage <= 3) {
+        // Début de la liste
+        pageNumbers = [1, 2, 3, 4, 5];
+      } else if (currentPage >= totalPages - 2) {
+        // Fin de la liste
+        pageNumbers = [
+          totalPages - 4,
+          totalPages - 3, 
+          totalPages - 2, 
+          totalPages - 1, 
+          totalPages
+        ];
+      } else {
+        // Milieu de la liste
+        pageNumbers = [
+          currentPage - 2,
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          currentPage + 2
+        ];
+      }
+    }
+
+    return (
+      <div className="pagination-container w-full flex justify-center mt-12 mb-8">
+        <div className="backdrop-blur-0 bg-transparent dark:bg-transparent rounded-full py-2 px-6 flex items-center space-x-3">
+          {/* Bouton précédent */}
+          <button 
+            onClick={goToPrevPage} 
+            disabled={currentPage === 1}
+            className={`text-2xl focus:outline-none transition-opacity ${currentPage === 1 ? 'opacity-30 cursor-not-allowed' : 'opacity-70 hover:opacity-100'}`}
+            aria-label="Page précédente"
+          >
+            &#8592;
+          </button>
+          
+          {/* Numéros de page */}
+          {pageNumbers.map(number => (
+            <button
+              key={number}
+              onClick={() => goToPage(number)}
+              className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${
+                currentPage === number 
+                  ? 'poetry-title shine-text bg-transparent dark:bg-transparent text-white dark:text-white font-bold'
+                  : 'text-gray-400 dark:text-gray-300 hover:bg-gray-700 hover:dark:bg-gray-600 hover:bg-opacity-30'
+              }`}
+              aria-label={`Page ${number}`}
+              aria-current={currentPage === number ? 'page' : undefined}
+            >
+              {number}
+            </button>
+          ))}
+          
+          {/* Bouton suivant */}
+          <button 
+            onClick={goToNextPage} 
+            disabled={currentPage === totalPages}
+            className={`text-2xl focus:outline-none transition-opacity ${currentPage === totalPages ? 'opacity-30 cursor-not-allowed' : 'opacity-70 hover:opacity-100'}`}
+            aria-label="Page suivante"
+          >
+            &#8594;
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   // Fonction pour organiser les poèmes différemment selon le format d'écran
   const renderPoems = () => {
+    const visiblePoems = getVisiblePoems();
+    
     if (isMobile) {
       // En mobile, afficher tous les poèmes sous la main
       return (
@@ -371,10 +497,10 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Tous les poèmes sous la main en une seule colonne */}
+          {/* Tous les poèmes sous la main en une seule colonne (5 par page) */}
           <div className="w-full mt-4">
             <div className="grid grid-cols-1 gap-6 mx-auto">
-              {poems.map((poem) => (
+              {visiblePoems.map((poem) => (
                 <div key={poem.id} className="w-[300px] mx-auto">
                   <Poem 
                     poem={poem} 
@@ -388,14 +514,24 @@ export default function Home() {
               ))}
             </div>
           </div>
+          
+          {/* Barre de pagination */}
+          {renderPagination()}
         </>
       );
     } else {
-      // En desktop, garder l'affichage original avec les poèmes de part et d'autre de la main
+      // En desktop, les deux premiers poèmes à côté de la main, puis 10 par page en dessous
+      // Si on est sur la première page, prendre les 2 premiers pour la mise en page spéciale
+      const currentPagePoems = visiblePoems;
+      const specialPoems = currentPage === 1 ? currentPagePoems.slice(0, 2) : [];
+      const remainingPoems = currentPage === 1 
+        ? currentPagePoems.slice(2) 
+        : currentPagePoems;
+        
       return (
         <>
-          {/* Image de la main et poèmes */}
-          <div className="w-full relative">
+          {/* Image de la main et poèmes (seulement sur la première page) */}
+          <div className="w-full relative mb-24">
             <div 
               className="relative mx-auto" 
               style={getHandContainerStyle()}
@@ -406,38 +542,42 @@ export default function Home() {
                 className="w-full h-full object-contain"
               />
               
-              {/* Poèmes de part et d'autre de la main */}
-              <div className="absolute left-[-0px] bottom-[200px] w-[300px]">
-                {featuredPoems[0] && (
-                  <Poem 
-                    poem={featuredPoems[0]} 
-                    searchTerm={searchTerm} 
-                    onReadMore={handleOpenPoem}
-                    isCompact={true}
-                    noBorder={true}
-                    centered={true}
-                  />
-                )}
-              </div>
-              
-              <div className="absolute right-[-0px] bottom-[200px] w-[300px]">
-                {featuredPoems[1] && (
-                  <Poem 
-                    poem={featuredPoems[1]} 
-                    searchTerm={searchTerm} 
-                    onReadMore={handleOpenPoem}
-                    isCompact={true}
-                    noBorder={true}
-                    centered={true}
-                  />
-                )}
-              </div>
+              {/* Poèmes de part et d'autre de la main uniquement sur la première page */}
+              {currentPage === 1 && (
+                <>
+                  <div className="absolute left-[-0px] bottom-[200px] w-[300px]">
+                    {specialPoems[0] && (
+                      <Poem 
+                        poem={specialPoems[0]} 
+                        searchTerm={searchTerm} 
+                        onReadMore={handleOpenPoem}
+                        isCompact={true}
+                        noBorder={true}
+                        centered={true}
+                      />
+                    )}
+                  </div>
+                  
+                  <div className="absolute right-[-0px] bottom-[200px] w-[300px]">
+                    {specialPoems[1] && (
+                      <Poem 
+                        poem={specialPoems[1]} 
+                        searchTerm={searchTerm} 
+                        onReadMore={handleOpenPoem}
+                        isCompact={true}
+                        noBorder={true}
+                        centered={true}
+                      />
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
           
-          {/* Poèmes réguliers */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mx-auto my-24">
-            {regularPoems.map((poem) => (
+          {/* Poèmes réguliers (8 ou 10 selon la page) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mx-auto my-12">
+            {remainingPoems.map((poem) => (
               <div key={poem.id} className="w-[300px] mx-auto">
                 <Poem 
                   poem={poem} 
@@ -449,6 +589,9 @@ export default function Home() {
               </div>
             ))}
           </div>
+          
+          {/* Barre de pagination */}
+          {renderPagination()}
         </>
       );
     }
@@ -462,83 +605,20 @@ export default function Home() {
         <meta name="theme-color" content={theme === 'dark' ? '#000000' : '#ffffff'} />
         <link rel="icon" href={getAssetPath("/favicon.ico")} />
       </Head>
-
-      <Particles />
       
-      {/* Bouton de basculement de thème */}
-      <button 
-        className="theme-toggle-button"
-        onClick={toggleTheme}
-        aria-label={theme === 'dark' ? 'Passer au thème clair' : 'Passer au thème sombre'}
-      >
-        <img 
-          src={getAssetPath("/images/journuit button.png")}
-          alt={theme === 'dark' ? 'Mode jour' : 'Mode nuit'}
-          width={60}
-          height={60}
-          className={`w-16 h-16 object-contain ${theme === 'dark' ? 'opacity-100' : 'opacity-50 rotate-180'}`}
-          style={{ 
-            filter: theme === 'dark' ? 'none' : 'invert(0.8) hue-rotate(180deg)', 
-            transition: 'all 0.3s ease' 
-          }}
+      <div className="flex flex-col min-h-screen">
+        <NavBar 
+          toggleTheme={toggleTheme} 
+          theme={theme}
+          isMenuVisible={isMenuVisible}
+          onMenuToggle={handleHamburgerClick}
+          onSearch={handleSearch}
+          searchTerm={searchTerm}
+          onSearchInput={handleSearchInput}
+          onReturnToAllPoems={handleReturnToAllPoems}
         />
-      </button>
-      
-      <div className="relative z-10 flex-grow flex flex-col min-h-screen">
-        <div className="fixed right-0 top-4 z-50 mr-4">
-          <button 
-            className="w-16 h-16 relative focus:outline-none"
-            onClick={handleHamburgerClick}
-            aria-label="Menu"
-          >
-            <img 
-              src={getAssetPath("/images/hamburger button.png")}
-              alt="Menu"
-              className="w-16 h-16 object-contain"
-            />
-          </button>
-          
-          {/* Le menu déroulant est toujours dans le DOM, mais avec la classe hidden si nécessaire */}
-          <div 
-            ref={menuRef} 
-            className={`navbar-menu absolute right-0 top-16 bg-opacity-90 p-4 rounded-lg shadow-lg w-64 ${isMenuVisible ? '' : 'hidden'}`}
-            style={{ 
-              backgroundColor: theme === 'dark' ? 'rgba(0, 0, 0, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-              display: isMenuVisible ? 'block' : 'none' 
-            }}
-          >
-            <div className="relative mb-4">
-              <input
-                type="text"
-                placeholder="Rechercher un poème..."
-                value={searchTerm}
-                onChange={handleSearchInput}
-                className="w-full border rounded-lg py-2 pl-4 pr-10 search-input"
-              />
-              {searchTerm && (
-                <button 
-                  onClick={handleReturnToAllPoems}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                >
-                  <img 
-                    src={getAssetPath("/images/return button.png")}
-                    alt="Retour"
-                    className="w-6 h-6 object-contain"
-                  />
-                </button>
-              )}
-              {!searchTerm && (
-                <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                  <img 
-                    src={getAssetPath("/images/loupe barre de recherche.png")}
-                    alt="Rechercher"
-                    className="w-6 h-6 object-contain"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        
+        <Particles />
         
         <main className="pt-10 max-w-7xl mx-auto px-4 flex-grow">
           {isLoading ? (

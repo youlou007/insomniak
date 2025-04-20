@@ -1,114 +1,102 @@
-import { useState } from 'react';
-import Image from 'next/image';
-import { AnimatePresence, motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { getAssetPath } from '../utils/assetPrefix';
 
-const NavBar = ({ onSearch }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      onSearch(searchQuery);
+const NavBar = ({ 
+  toggleTheme, 
+  theme, 
+  isMenuVisible, 
+  onMenuToggle, 
+  searchTerm, 
+  onSearchInput, 
+  onSearch,
+  onReturnToAllPoems 
+}) => {
+  const menuRef = useRef(null);
+  
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && onSearch) {
+      onSearch(searchTerm);
     }
   };
-
+  
   return (
-    <header className="sticky top-0 bg-black bg-opacity-90 z-50 py-2 px-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Yacine et ces nuits</h1>
-        
+    <nav className="relative z-10">
+      {/* Bouton de basculement de thème */}
+      <button 
+        className="theme-toggle-button"
+        onClick={toggleTheme}
+        aria-label={theme === 'dark' ? 'Passer au thème clair' : 'Passer au thème sombre'}
+      >
+        <img 
+          src={getAssetPath("/images/journuit button.png")}
+          alt={theme === 'dark' ? 'Mode jour' : 'Mode nuit'}
+          width={60}
+          height={60}
+          className={`w-16 h-16 object-contain ${theme === 'dark' ? 'opacity-100' : 'opacity-50 rotate-180'}`}
+          style={{ 
+            filter: theme === 'dark' ? 'none' : 'invert(0.8) hue-rotate(180deg)', 
+            transition: 'all 0.3s ease' 
+          }}
+        />
+      </button>
+      
+      {/* Bouton hamburger pour recherche */}
+      <div className="fixed right-0 top-4 z-50 mr-4">
         <button 
-          className="w-10 h-10 relative focus:outline-none"
-          onClick={toggleMenu}
+          className="w-16 h-16 relative focus:outline-none"
+          onClick={onMenuToggle}
           aria-label="Menu"
         >
-          <Image 
-            src="/images/hamburger button.png" 
+          <img 
+            src={getAssetPath("/images/hamburger button.png")}
             alt="Menu"
-            width={40} 
-            height={40} 
-            className="object-contain"
+            className="w-16 h-16 object-contain"
           />
         </button>
-      </div>
-
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mt-4"
-          >
-            <form onSubmit={handleSearchSubmit} className="flex items-center">
-              <div className="relative flex-grow">
-                <input
-                  type="text"
-                  placeholder="Rechercher un poème..."
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  className="search-bar w-full bg-transparent border border-gray-500 border-opacity-15 rounded-lg py-2 pl-4 pr-10 text-white text-opacity-90 backdrop-blur-sm shadow-none transition-all duration-300 hover:border-opacity-25 focus:border-opacity-40 focus:outline-none"
+        
+        {/* Le menu déroulant est toujours dans le DOM, mais avec la classe hidden si nécessaire */}
+        <div 
+          ref={menuRef} 
+          className={`navbar-menu absolute right-0 top-16 bg-opacity-90 p-4 rounded-lg shadow-lg w-64 ${isMenuVisible ? '' : 'hidden'}`}
+          style={{ 
+            backgroundColor: theme === 'dark' ? 'rgba(0, 0, 0, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+            display: isMenuVisible ? 'block' : 'none' 
+          }}
+        >
+          <div className="relative mb-4">
+            <input
+              type="text"
+              placeholder="Rechercher un poème..."
+              value={searchTerm}
+              onChange={onSearchInput}
+              onKeyDown={handleSearch}
+              className="w-full border rounded-lg py-2 pl-4 pr-10 search-input"
+            />
+            {searchTerm && (
+              <button 
+                onClick={onReturnToAllPoems}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2"
+              >
+                <img 
+                  src={getAssetPath("/images/return button.png")}
+                  alt="Retour"
+                  className="w-6 h-6 object-contain"
                 />
-                <button 
-                  type="submit" 
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                >
-                  <Image 
-                    src="/images/loupe barre de recherche.png" 
-                    alt="Rechercher"
-                    width={24} 
-                    height={24} 
-                    className="object-contain"
-                  />
-                </button>
+              </button>
+            )}
+            {!searchTerm && (
+              <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                <img 
+                  src={getAssetPath("/images/loupe barre de recherche.png")}
+                  alt="Rechercher"
+                  className="w-6 h-6 object-contain"
+                />
               </div>
-            </form>
-            
-            <nav className="mt-4 flex space-x-4 justify-center">
-              <a href="#" className="flex flex-col items-center">
-                <Image 
-                  src="/images/home button.png" 
-                  alt="Accueil"
-                  width={24} 
-                  height={24}
-                  className="object-contain" 
-                />
-                <span className="text-xs mt-1">Accueil</span>
-              </a>
-              <a href="#" className="flex flex-col items-center">
-                <Image 
-                  src="/images/profile user.png" 
-                  alt="Profil"
-                  width={24} 
-                  height={24}
-                  className="object-contain"
-                />
-                <span className="text-xs mt-1">Profil</span>
-              </a>
-              <a href="#" className="flex flex-col items-center">
-                <Image 
-                  src="/images/settings button.png" 
-                  alt="Paramètres"
-                  width={24} 
-                  height={24}
-                  className="object-contain"
-                />
-                <span className="text-xs mt-1">Paramètres</span>
-              </a>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
   );
 };
 
