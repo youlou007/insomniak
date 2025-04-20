@@ -500,6 +500,18 @@ const PoemPopup = ({ poem, onClose, searchTerm }) => {
           style={getPopupStyles()}
           onClick={(e) => e.stopPropagation()}
         >
+          {/* Croix de fermeture semi-transparente */}
+          <button 
+            className="absolute top-2 right-2 z-[70] w-6 h-6 flex items-center justify-center"
+            onClick={handleClose}
+            aria-label="Fermer"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white opacity-50 hover:opacity-80 transition-opacity">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+
           {/* Particules autour du popup */}
           <PopupParticles 
             isVisible={isVisible} 

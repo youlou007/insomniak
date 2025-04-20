@@ -449,10 +449,10 @@ export default function Home() {
             <button
               key={number}
               onClick={() => goToPage(number)}
-              className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${
+              className={`w-8 h-8 flex items-center justify-center transition-all text-lg font-bold poetry-title ${
                 currentPage === number 
-                  ? 'poetry-title shine-text bg-transparent dark:bg-transparent text-white dark:text-white font-bold'
-                  : 'text-gray-400 dark:text-gray-300 hover:bg-gray-700 hover:dark:bg-gray-600 hover:bg-opacity-30'
+                  ? 'shine-text text-white dark:text-white border-2 border-[#D3D3D3] border-opacity-70 rounded-full'
+                  : 'text-gray-400 dark:text-gray-300 hover:text-white hover:dark:text-white'
               }`}
               aria-label={`Page ${number}`}
               aria-current={currentPage === number ? 'page' : undefined}
@@ -521,16 +521,14 @@ export default function Home() {
       );
     } else {
       // En desktop, les deux premiers poèmes à côté de la main, puis 10 par page en dessous
-      // Si on est sur la première page, prendre les 2 premiers pour la mise en page spéciale
+      // Prendre les 2 premiers de la page actuelle pour la mise en page spéciale
       const currentPagePoems = visiblePoems;
-      const specialPoems = currentPage === 1 ? currentPagePoems.slice(0, 2) : [];
-      const remainingPoems = currentPage === 1 
-        ? currentPagePoems.slice(2) 
-        : currentPagePoems;
+      const specialPoems = currentPagePoems.slice(0, 2);
+      const remainingPoems = currentPagePoems.slice(2);
         
       return (
         <>
-          {/* Image de la main et poèmes (seulement sur la première page) */}
+          {/* Image de la main et poèmes */}
           <div className="w-full relative mb-24">
             <div 
               className="relative mx-auto" 
@@ -542,36 +540,34 @@ export default function Home() {
                 className="w-full h-full object-contain"
               />
               
-              {/* Poèmes de part et d'autre de la main uniquement sur la première page */}
-              {currentPage === 1 && (
-                <>
-                  <div className="absolute left-[-0px] bottom-[200px] w-[300px]">
-                    {specialPoems[0] && (
-                      <Poem 
-                        poem={specialPoems[0]} 
-                        searchTerm={searchTerm} 
-                        onReadMore={handleOpenPoem}
-                        isCompact={true}
-                        noBorder={true}
-                        centered={true}
-                      />
-                    )}
-                  </div>
-                  
-                  <div className="absolute right-[-0px] bottom-[200px] w-[300px]">
-                    {specialPoems[1] && (
-                      <Poem 
-                        poem={specialPoems[1]} 
-                        searchTerm={searchTerm} 
-                        onReadMore={handleOpenPoem}
-                        isCompact={true}
-                        noBorder={true}
-                        centered={true}
-                      />
-                    )}
-                  </div>
-                </>
-              )}
+              {/* Poèmes de part et d'autre de la main pour toutes les pages */}
+              <>
+                <div className="absolute left-[-0px] bottom-[200px] w-[300px]">
+                  {specialPoems[0] && (
+                    <Poem 
+                      poem={specialPoems[0]} 
+                      searchTerm={searchTerm} 
+                      onReadMore={handleOpenPoem}
+                      isCompact={true}
+                      noBorder={true}
+                      centered={true}
+                    />
+                  )}
+                </div>
+                
+                <div className="absolute right-[-0px] bottom-[200px] w-[300px]">
+                  {specialPoems[1] && (
+                    <Poem 
+                      poem={specialPoems[1]} 
+                      searchTerm={searchTerm} 
+                      onReadMore={handleOpenPoem}
+                      isCompact={true}
+                      noBorder={true}
+                      centered={true}
+                    />
+                  )}
+                </div>
+              </>
             </div>
           </div>
           
@@ -600,7 +596,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <Head>
-        <title>Yacine, insomniak - Poèmes</title>
+        <title>Insomniak</title>
         <meta name="description" content="Collection de poèmes de Yacine" />
         <meta name="theme-color" content={theme === 'dark' ? '#000000' : '#ffffff'} />
         <link rel="icon" href={getAssetPath("/favicon.ico")} />
@@ -628,7 +624,7 @@ export default function Home() {
               {/* Section avec le titre et la main */}
               <div className="min-h-screen flex flex-col justify-start items-center relative pt-10">
                 {/* Titre séparé de l'image de la main */}
-                <div className="w-full text-center mb-0">
+                <div className={`w-full text-center mb-0 ${isMobile ? 'mt-16' : ''}`}>
                   <h1 className={`poetry-title font-bold ${isMobile ? 'text-4xl md:text-6xl' : 'text-8xl'}`}>
                     Yacine - L'encre des insomnies
                   </h1>
